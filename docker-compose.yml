@@ -1,0 +1,37 @@
+# Fake downstream services and the worker run on this machine; Temporal is the Cloud namespace.
+# `up` starts the fakes; the worker runs in the foreground in its own terminal (scripts/demo.sh worker).
+# Connection settings come from .env (see .env.example), which compose reads automatically.
+x-app: &app
+  image: northwind-order-demo
+  build: .
+
+x-temporal-env: &temporal-env
+  TEMPORAL_ADDRESS: ${TEMPORAL_ADDRESS:?set TEMPORAL_ADDRESS in .env}
+  TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE:?set TEMPORAL_NAMESPACE in .env}
+  TEMPORAL_API_KEY: ${TEMPORAL_API_KEY:?set TEMPORAL_API_KEY in .env}
+
+services:
+  fakes:
+    <<: *app
+    command: ["java", "-cp", "lib/*", "com.northwind.fakes.FakeServices"]
+    ports:
+      - "8080:8080"
+
+  # Run in the foreground by `scripts/demo.sh worker`, so the panel sees it work, die and restart.
+  worker:
+    <<: *app
+    command: ["java", "-cp", "lib/*", "com.northwind.orders.WorkerMain"]
+    environment:
+      <<: *temporal-env
+      FAKES_URL: http://fakes:8080
+    depends_on:
+      - fakes
+    profiles: ["tools"]
+
+  # Not started by `up`; used by scripts/demo.sh via `docker compose run`.
+  starter:
+    <<: *app
+    entrypoint: ["java", "-cp", "lib/*", "com.northwind.orders.StarterMain"]
+    environment:
+      <<: *temporal-env
+    profiles: ["tools"]

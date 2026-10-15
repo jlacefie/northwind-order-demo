@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+application {
+    mainClass = 'com.northwind.orders.WorkerMain'
+}
+
+group = 'com.northwind'
+version = '0.1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    temporalVersion = '1.40.0'
+}
+
+dependencies {
+    implementation "io.temporal:temporal-sdk:${temporalVersion}"
+    runtimeOnly 'org.slf4j:slf4j-simple:2.0.16'
+
+    testImplementation("io.temporal:temporal-testing:${temporalVersion}") {
+        capabilities {
+            requireCapability('io.temporal:temporal-testing-junit5')
+        }
+    }
+    testImplementation "io.temporal:temporal-test-server:${temporalVersion}"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    // Optional SDK dependency; WorkflowReplayer needs it to read JSON histories.
+    testImplementation 'com.jayway.jsonpath:json-path:2.9.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
