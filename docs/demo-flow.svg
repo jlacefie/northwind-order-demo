@@ -118,6 +118,6 @@
   <text x="520" y="822" font-size="16" fill="#475569" text-anchor="middle">Worker + fake payment, inventory, shipping</text>
   <line x1="752" y1="802" x2="848" y2="802" stroke="#475569" stroke-width="2.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
   <rect x="850" y="770" width="460" height="64" rx="10" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
-  <text x="1080" y="798" font-size="18" font-weight="700" fill="#0F172A" text-anchor="middle">Temporal Cloud (northwind.icxij)</text>
+  <text x="1080" y="798" font-size="18" font-weight="700" fill="#0F172A" text-anchor="middle">Temporal Cloud</text>
   <text x="1080" y="822" font-size="16" fill="#475569" text-anchor="middle">Durable order state, timers, retries</text>
 </svg>
